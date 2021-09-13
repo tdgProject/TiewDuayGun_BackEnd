@@ -36,9 +36,6 @@ public class User implements Comparable<User>{
 	
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<Review> reviews;
-	
-	@OneToOne(mappedBy = "owner")
-	    private User user;
 	  
 	@Override
 	public int compareTo(User other) {
