@@ -18,8 +18,8 @@ public class TagType {
 	
 	@Column(name = "typename", nullable = false, length = 20)
 	private String typeName;
-	
-	@OneToMany(mappedBy = "type",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	private List<Tag> tag;
+
+//	@OneToMany(mappedBy = "type",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+//	private List<Tag> tag;
 	
 }

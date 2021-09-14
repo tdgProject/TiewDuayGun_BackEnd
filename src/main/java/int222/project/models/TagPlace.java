@@ -1,6 +1,9 @@
 package int222.project.models;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @NoArgsConstructor
@@ -9,7 +12,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "tagplace")
-//@JsonIgnoreProperties(value = {"productColorId"})
+@JsonIgnoreProperties(value = {"tagPlaceId"})
 public class TagPlace {
 	
 	@EmbeddedId
@@ -18,6 +21,7 @@ public class TagPlace {
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")
+	@JsonBackReference
 	private Place place;
 	
 	@ManyToOne(optional = false)

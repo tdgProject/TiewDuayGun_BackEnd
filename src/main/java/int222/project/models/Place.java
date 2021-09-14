@@ -23,7 +23,7 @@ public class Place implements Serializable,Comparable<Place>{
 	@Column(name = "rating", precision = 4, scale = 2)
 	private double placeRating;
 	
-	@Column(name = "prodescription", length = 1000)
+	@Column(name = "pdescription", length = 1000)
 	private String productDescription;
 
 	@Column(name = "pimage")

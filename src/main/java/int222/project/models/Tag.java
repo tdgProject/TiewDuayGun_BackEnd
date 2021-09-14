@@ -2,6 +2,8 @@ package int222.project.models;
 
 import java.util.List;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Getter
@@ -22,7 +24,8 @@ public class Tag implements Comparable<Tag>{
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "typeid", referencedColumnName = "typeid")
 	private TagType type;
-	
+
+	@JsonBackReference
 	@OneToMany(mappedBy = "tag",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tagPlace;
 	

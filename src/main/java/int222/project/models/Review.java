@@ -1,6 +1,9 @@
 package int222.project.models;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 @Getter
@@ -9,10 +12,12 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "review")
+@JsonIgnoreProperties(value = {"reviewId"})
 public class Review {
 	@EmbeddedId
 	private ReviewPK reviewId;
-	
+
+	@JsonBackReference
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")

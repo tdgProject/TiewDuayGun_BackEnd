@@ -2,6 +2,8 @@ package int222.project.models;
 
 import java.util.List;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Getter
@@ -33,7 +35,8 @@ public class User implements Comparable<User>{
 
 	@Column(name = "uimage")
 	private String image;
-	
+
+	@JsonBackReference
 	@OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<Review> reviews;
 	  
