@@ -23,6 +23,7 @@ public class Tag implements Comparable<Tag>{
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "typeid", referencedColumnName = "typeid")
+	@JsonBackReference
 	private TagType type;
 
 	@JsonBackReference

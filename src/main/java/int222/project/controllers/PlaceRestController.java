@@ -28,7 +28,7 @@ public class PlaceRestController {
 
 	private FileService fileService = new FileService();
 
-	@GetMapping("")
+	@GetMapping("/place")
 	public List<Place> placeList() {
 		return placeRepository.findAll();
 	}
@@ -49,7 +49,7 @@ public class PlaceRestController {
 	public Place create(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) throws Exception {
 
 		if(placeImage != null) {
-			newPlace.setImage(fileService.save(placeImage,newPlace.getPlacetName()));
+			newPlace.setImage(fileService.save(placeImage,newPlace.getPlaceName()));
 		}
 		addTagPlacePk(newPlace);
 		return placeRepository.saveAndFlush(newPlace);
@@ -61,7 +61,7 @@ public class PlaceRestController {
 		editPlace(p,newPlace);
 		if(placeImage != null) {
 			fileService.delete(p.getImage());
-			p.setImage(fileService.save(placeImage,p.getPlacetName()));
+			p.setImage(fileService.save(placeImage,p.getPlaceName()));
 		}
 		return placeRepository.saveAndFlush(p);
 	}
@@ -81,7 +81,7 @@ public class PlaceRestController {
 	}
 
 	private void editPlace(Place old,Place p){
-		old.setPlacetName(p.getPlacetName());
+		old.setPlaceName(p.getPlaceName());
 		old.setPlaceRating(p.getPlaceRating());
 		old.setPlaceDescription(p.getPlaceDescription());
 		tagPlaceRepository.deleteByPlaceId(old.getPlaceId());

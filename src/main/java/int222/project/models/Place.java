@@ -18,7 +18,7 @@ public class Place implements Serializable,Comparable<Place>{
 	private Integer placeId;
 	
 	@Column(name = "pname", nullable = false, length = 50)
-	private String placetName;
+	private String placeName;
 	
 	@Column(name = "rating", precision = 4, scale = 2)
 	private double placeRating;
