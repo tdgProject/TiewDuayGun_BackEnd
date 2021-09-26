@@ -5,6 +5,7 @@ import int222.project.repositories.PlaceRepository;
 import int222.project.repositories.ReviewRepository;
 import int222.project.repositories.UserRepository;
 import int222.project.services.FileService;
+import int222.project.services.UserFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class ReviewRestController {
     @Autowired
     private PlaceRepository placeRepository;
 
-    private FileService fileService = new FileService();
+    private FileService fileService = new UserFileService();
 
     @GetMapping("/reviews")
     public List<Review> listReviews() {

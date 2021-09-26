@@ -4,15 +4,15 @@ package int222.project.controllers;
 import java.util.List;
 
 import int222.project.services.FileService;
+import int222.project.services.PlaceFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import int222.project.models.*;
 import int222.project.repositories.*;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
 
 
 @RestController
@@ -26,7 +26,7 @@ public class PlaceRestController {
 	@Autowired
 	private TagRepository tagRepository;
 
-	private FileService fileService = new FileService();
+	private FileService fileService = new PlaceFileService();
 
 	@GetMapping("/places")
 	public List<Place> placeList() {
@@ -46,10 +46,10 @@ public class PlaceRestController {
 	}
 
 	@PostMapping(value = "/place/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public Place addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) throws Exception {
+	public Place addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) {
 
 		if(placeImage != null) {
-			newPlace.setImage(fileService.save(placeImage,newPlace.getPlaceName()));
+			newPlace.setImage(fileService.save(placeImage, newPlace.getPlaceName()));
 		}
 		addTagPlace(newPlace);
 		return placeRepository.saveAndFlush(newPlace);
@@ -68,8 +68,8 @@ public class PlaceRestController {
 
 	@DeleteMapping("/place/delete/{id}")
 	public void deletePlace(@PathVariable int id) {
-//		Place p = placeRepository.findById(id).orElse(null);
-//		fileService.delete(p.getImage());
+		Place p = placeRepository.findById(id).orElse(null);
+		fileService.delete(p.getImage());
 		placeRepository.deleteById(id);
 		placeRepository.flush();
 	}

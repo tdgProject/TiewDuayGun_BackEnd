@@ -26,11 +26,11 @@ import java.util.stream.Stream;
 @Service
 public class FileService implements StorageService {
 
-    final Path rootLocation;
+    Path rootLocation;
 
     @Autowired
     public FileService() {
-        this.rootLocation = Paths.get("./public/images/place");
+        this.rootLocation = Paths.get("./public/images");
     }
 
     @Override
@@ -109,15 +109,15 @@ public class FileService implements StorageService {
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
     }
-    
+
     @Override
     public void delete(String filename) {
-    	try {
+        try {
             Path file = load(filename);
             Files.delete(file);
         }
         catch (IOException e) {
-        	throw new StorageException("fail to delete file"+ filename, e);
+            throw new StorageException("fail to delete file"+ filename, e);
         }
     }
     public String save(MultipartFile file,String name){
