@@ -30,7 +30,7 @@ public class FileService implements StorageService {
 
     @Autowired
     public FileService() {
-        this.rootLocation = Paths.get("./public/images");
+        this.rootLocation = Paths.get("./public/images/place");
     }
 
     @Override

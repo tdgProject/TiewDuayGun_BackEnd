@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 @NoArgsConstructor
@@ -16,12 +17,13 @@ import lombok.*;
 public class TagPlace {
 	
 	@EmbeddedId
+	@JsonManagedReference
 	private TagPlacePK tagPlaceId;
 	
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")
-	@JsonBackReference
+	@JsonBackReference(value = "tag-place")
 	private Place place;
 	
 	@ManyToOne(optional = false)

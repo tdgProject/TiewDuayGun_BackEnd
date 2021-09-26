@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 @Getter
@@ -16,9 +17,10 @@ import lombok.*;
 public class NearBy {
 	
 	@EmbeddedId
+	@JsonManagedReference
 	private NearByPK NearById;
 
-	@JsonBackReference
+	@JsonBackReference(value = "nearby-place")
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")

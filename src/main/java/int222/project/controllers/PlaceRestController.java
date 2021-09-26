@@ -22,13 +22,13 @@ public class PlaceRestController {
 	@Autowired
 	private PlaceRepository placeRepository;
 	@Autowired
-	private UserRepository userRepository;
-	@Autowired
 	private TagPlaceRepository tagPlaceRepository;
+	@Autowired
+	private TagRepository tagRepository;
 
 	private FileService fileService = new FileService();
 
-	@GetMapping("/place")
+	@GetMapping("/places")
 	public List<Place> placeList() {
 		return placeRepository.findAll();
 	}
@@ -38,25 +38,25 @@ public class PlaceRestController {
 		return placeRepository.findById(id).orElse(null);
 	}
 
-	@GetMapping("/image/{name}")
+	@GetMapping("/image/place/{name}")
 	@ResponseBody
 	public ResponseEntity<Resource> getFile(@PathVariable String name) {
 		Resource file = (Resource) fileService.loadAsResource(name);
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
 	}
 
-	@PostMapping(value = "/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public Place create(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) throws Exception {
+	@PostMapping(value = "/place/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public Place addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) throws Exception {
 
 		if(placeImage != null) {
 			newPlace.setImage(fileService.save(placeImage,newPlace.getPlaceName()));
 		}
-		addTagPlacePk(newPlace);
+		addTagPlace(newPlace);
 		return placeRepository.saveAndFlush(newPlace);
 	}
 
-	@PutMapping(value = "/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-	public Place update(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id) {
+	@PutMapping(value = "/place/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public Place editPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id) {
 		Place p = placeRepository.findById(id).orElse(null);
 		editPlace(p,newPlace);
 		if(placeImage != null) {
@@ -66,16 +66,17 @@ public class PlaceRestController {
 		return placeRepository.saveAndFlush(p);
 	}
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable int id) {
-		Place p = placeRepository.findById(id).orElse(null);
-		fileService.delete(p.getImage());
+	@DeleteMapping("/place/delete/{id}")
+	public void deletePlace(@PathVariable int id) {
+//		Place p = placeRepository.findById(id).orElse(null);
+//		fileService.delete(p.getImage());
 		placeRepository.deleteById(id);
 		placeRepository.flush();
 	}
-	private void addTagPlacePk(Place place){
+	private void addTagPlace(Place place){
 		for(TagPlace tp : place.getTags()){
 			tp.setTagPlaceId(new TagPlacePK(place.getPlaceId(),tp.getTag().getTagId()));
+			tp.setTag(tagRepository.findById(tp.getTag().getTagId()).orElse(null));
 			tp.setPlace(place);
 		}
 	}
@@ -86,7 +87,7 @@ public class PlaceRestController {
 		old.setPlaceDescription(p.getPlaceDescription());
 		tagPlaceRepository.deleteByPlaceId(old.getPlaceId());
 		old.setTags(p.getTags());
-		addTagPlacePk(old);
+		addTagPlace(old);
 	}
 
 

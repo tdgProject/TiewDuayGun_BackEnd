@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 @Getter
@@ -15,9 +16,10 @@ import lombok.*;
 @JsonIgnoreProperties(value = {"reviewId"})
 public class Review {
 	@EmbeddedId
+	@JsonManagedReference
 	private ReviewPK reviewId;
 
-	@JsonBackReference
+	@JsonBackReference(value = "review-place")
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")

@@ -2,6 +2,8 @@ package int222.project.models;
 
 import java.io.Serializable;
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import javax.persistence.*;
 
@@ -31,12 +33,6 @@ public class Place implements Serializable,Comparable<Place>{
 	
 	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tags;
-	
-	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	private List<Review> reviews;
-	
-	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	private List<NearBy> hotels;
 	
 	@Override
 	public int compareTo(Place other) {

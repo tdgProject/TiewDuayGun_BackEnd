@@ -23,10 +23,10 @@ public class Tag implements Comparable<Tag>{
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "typeid", referencedColumnName = "typeid")
-	@JsonBackReference
+	@JsonBackReference(value = "tag-type")
 	private TagType type;
 
-	@JsonBackReference
+	@JsonBackReference(value = "tag-tagplace")
 	@OneToMany(mappedBy = "tag",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tagPlace;
 	
