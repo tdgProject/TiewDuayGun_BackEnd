@@ -3,6 +3,7 @@ package int222.project.controllers;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import int222.project.services.FileService;
 import int222.project.services.PlaceFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,16 @@ public class PlaceRestController {
 	@GetMapping("/places")
 	public List<Place> placeList() {
 		return placeRepository.findAll();
+	}
+
+	@GetMapping("/place/tag/{id}")
+	public List<Place> placeByTagId(@PathVariable int id) {
+		return tagPlaceRepository.listPLaceByTagId(id);
+	}
+
+	@GetMapping("/place/name/{name}")
+	public List<Place> placeByName(@PathVariable String name) {
+		return placeRepository.listPLaceByName(name);
 	}
 
 	@GetMapping("/place/{id}")
