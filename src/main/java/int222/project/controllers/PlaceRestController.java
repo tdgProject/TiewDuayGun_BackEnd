@@ -25,8 +25,17 @@ public class PlaceRestController {
 	private TagPlaceRepository tagPlaceRepository;
 	@Autowired
 	private TagRepository tagRepository;
+	@Autowired
+	private ReviewRepository reviewRepository;
 
 	private FileService fileService = new PlaceFileService();
+
+	@GetMapping("/onstart")
+	public void onstart() {
+		List<Place> pl = placeRepository.findAll();
+		ratingCal(pl);
+		placeRepository.saveAllAndFlush(pl);
+	}
 
 	@GetMapping("/places")
 	public List<Place> placeList() {
@@ -88,6 +97,20 @@ public class PlaceRestController {
 		tagPlaceRepository.deleteByPlaceId(old.getPlaceId());
 		old.setTags(p.getTags());
 		addTagPlace(old);
+	}
+
+	private void ratingCal(List<Place> list){
+		for(Place p : list){
+			double pRating = 0.0,uRating = 0.0;
+			List<Review> reviews = reviewRepository.findAllByPlaceId(p.getPlaceId());
+			if(reviews.size()>0){
+				for(Review r : reviews){
+					uRating+=r.getRating();
+				}
+				pRating=uRating/reviews.size();
+				p.setPlaceRating(pRating);
+			}
+		}
 	}
 
 
