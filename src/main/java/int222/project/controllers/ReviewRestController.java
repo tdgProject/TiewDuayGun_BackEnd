@@ -15,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://13.76.86.65:8080")
 public class ReviewRestController {
 
     @Autowired
