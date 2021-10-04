@@ -39,7 +39,7 @@ public class ReviewRestController {
 
     @GetMapping("/image/user/{name}")
     @ResponseBody
-    public ResponseEntity<Resource> getUserFile(@PathVariable String name) {
+    public ResponseEntity<Resource> getUserImage(@PathVariable String name) {
         Resource file = (Resource) fileService.loadAsResource(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }

@@ -60,7 +60,7 @@ public class PlaceRestController {
 
 	@GetMapping("/image/place/{name}")
 	@ResponseBody
-	public ResponseEntity<Resource> getFile(@PathVariable String name) {
+	public ResponseEntity<Resource> getPlaceImage(@PathVariable String name) {
 		Resource file = (Resource) fileService.loadAsResource(name);
 		return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
 	}
