@@ -7,11 +7,10 @@ import int222.project.repositories.UserRepository;
 import int222.project.services.FileService;
 import int222.project.services.UserFileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
