@@ -7,11 +7,10 @@ import int222.project.repositories.UserRepository;
 import int222.project.services.FileService;
 import int222.project.services.UserFileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
@@ -39,7 +38,7 @@ public class ReviewRestController {
 
     @GetMapping("/image/user/{name}")
     @ResponseBody
-    public ResponseEntity<Resource> getUserFile(@PathVariable String name) {
+    public ResponseEntity<Resource> getUserImage(@PathVariable String name) {
         Resource file = (Resource) fileService.loadAsResource(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }
