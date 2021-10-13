@@ -41,6 +41,11 @@ public class HotelRestController {
         return nearByRepository.findAllByPlaceId(id);
     }
 
+    @GetMapping("/hotel/user/{id}")
+    public List<Hotel> getMyHotel(@PathVariable int id) {
+        return hotelRepository.getHotelByOwnerId(id);
+    }
+
     @GetMapping("/image/hotel/{name}")
     @ResponseBody
     public ResponseEntity<org.springframework.core.io.Resource> getHotelImage(@PathVariable String name) {

@@ -22,4 +22,5 @@ public interface TagTypeRepository extends JpaRepository<TagType, Integer> {
     @Modifying
     @Query("SELECT tt.tag FROM TagType tt WHERE NOT tt.typeId = 1")
     public List<Tag> listEtcTag();
+
 }
