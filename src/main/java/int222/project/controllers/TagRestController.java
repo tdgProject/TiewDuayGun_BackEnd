@@ -28,4 +28,14 @@ public class TagRestController {
     public List<TagType> types(){
         return tagTypeRepository.findAll();
     }
+
+    @GetMapping("/tags/province")
+    public List<Tag> provinceTags(){
+        return tagTypeRepository.listProvinceTag();
+    }
+
+    @GetMapping("/tags/etc")
+    public List<Tag> etcTags(){
+        return tagTypeRepository.listEtcTag();
+    }
 }
