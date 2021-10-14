@@ -78,7 +78,7 @@ public class PlaceRestController {
 	@PutMapping(value = "/place/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	public Place editPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id) {
 		Place p = placeRepository.findById(id).orElse(null);
-		editPlace(p,newPlace);
+		placeEdit(p,newPlace);
 		if(placeImage != null) {
 			fileService.delete(p.getImage());
 			p.setImage(fileService.save(placeImage,p.getPlaceName()));
@@ -101,7 +101,7 @@ public class PlaceRestController {
 		}
 	}
 
-	private void editPlace(Place old,Place p){
+	private void placeEdit(Place old,Place p){
 		old.setPlaceName(p.getPlaceName());
 		old.setPlaceRating(p.getPlaceRating());
 		old.setPlaceDescription(p.getPlaceDescription());
