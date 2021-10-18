@@ -113,6 +113,7 @@ public class PlaceRestController {
 		old.setPlaceDescription(p.getPlaceDescription());
 		tagPlaceRepository.deleteByPlaceId(old.getPlaceId());
 		old.setTags(p.getTags());
+		old.setVideo(p.getVideo());
 		addTagPlace(old);
 	}
 

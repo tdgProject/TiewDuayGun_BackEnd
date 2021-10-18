@@ -28,8 +28,11 @@ public class Place implements Serializable,Comparable<Place>{
 	@Column(name = "pdescription", length = 1000)
 	private String placeDescription;
 
-	@Column(name = "pimage")
+	@Column(name = "pimage", length = 400)
 	private String image;
+
+	@Column(name = "pvideo", length = 500)
+	private String video;
 	
 	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tags;
