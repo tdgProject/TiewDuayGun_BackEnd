@@ -34,7 +34,7 @@ public class Hotel implements Comparable<Hotel> {
 	private String image;
 
 	@OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	@JsonBackReference
+	@JsonBackReference(value = "hotel-nearby")
 	private List<NearBy> places;
 	
 	@OneToOne(cascade = CascadeType.ALL)

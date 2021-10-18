@@ -35,11 +35,11 @@ public class Place implements Serializable,Comparable<Place>{
 	private List<TagPlace> tags;
 
 	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	@JsonBackReference
+	@JsonBackReference(value = "place-nearby")
 	private List<NearBy> hotels;
 
 	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-	@JsonBackReference
+	@JsonBackReference(value = "place-review")
 	private List<Review> reviews;
 	
 	@Override
