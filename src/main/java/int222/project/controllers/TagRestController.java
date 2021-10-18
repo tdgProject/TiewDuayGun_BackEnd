@@ -1,5 +1,6 @@
 package int222.project.controllers;
 
+import int222.project.models.Place;
 import int222.project.models.Tag;
 import int222.project.models.TagPlace;
 import int222.project.models.TagType;
@@ -43,5 +44,19 @@ public class TagRestController {
     @GetMapping("/tags/etc")
     public List<Tag> etcTags(){
         return tagTypeRepository.listEtcTag();
+    }
+
+    @GetMapping("/types/count")
+    public List<TagType> typesWithCount(){
+        List<TagType> ttList = tagTypeRepository.findAll();
+        for (TagType tt : ttList){
+            for(Tag t : tt.getTag()){
+                List<Place> tpList = tagPlaceRepository.listPLaceByTagId(t.getTagId());
+                t.setCount(tpList.size()) ;
+            }
+        }
+
+        return ttList;
+
     }
 }

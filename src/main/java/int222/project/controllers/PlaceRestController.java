@@ -90,13 +90,19 @@ public class PlaceRestController {
 	public void deletePlace(@PathVariable int id) {
 		Place p = placeRepository.findById(id).orElse(null);
 		fileService.delete(p.getImage());
+		for(TagPlace tp : p.getTags()){
+			Tag t = tagRepository.findById(tp.getTag().getTagId()).orElse(null);
+			t.setCount(t.getCount()-1);
+		}
 		placeRepository.deleteById(id);
 		placeRepository.flush();
 	}
 	private void addTagPlace(Place place){
 		for(TagPlace tp : place.getTags()){
 			tp.setTagPlaceId(new TagPlacePK(place.getPlaceId(),tp.getTag().getTagId()));
-			tp.setTag(tagRepository.findById(tp.getTag().getTagId()).orElse(null));
+			Tag t = tagRepository.findById(tp.getTag().getTagId()).orElse(null);
+			t.setCount(t.getCount()+1);
+			tp.setTag(t);
 			tp.setPlace(place);
 		}
 	}
