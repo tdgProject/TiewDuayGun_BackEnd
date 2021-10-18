@@ -33,6 +33,14 @@ public class Place implements Serializable,Comparable<Place>{
 	
 	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tags;
+
+	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+	@JsonBackReference
+	private List<NearBy> hotels;
+
+	@OneToMany(mappedBy = "place",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+	@JsonBackReference
+	private List<Review> reviews;
 	
 	@Override
 	public int compareTo(Place other) {
