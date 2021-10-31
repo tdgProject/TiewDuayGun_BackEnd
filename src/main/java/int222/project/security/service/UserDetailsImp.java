@@ -23,6 +23,8 @@ public class UserDetailsImp implements UserDetails {
 
     private String email;
 
+    private String telNumber;
+
     @JsonIgnore
     private String password;
 
@@ -30,13 +32,15 @@ public class UserDetailsImp implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImp(Integer id, String username, String email, String password,String image,
+    public UserDetailsImp(Integer id, String username, String email, String password,String image,String telNumber,
                           Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.telNumber = telNumber;
         this.password = password;
         this.image = image;
+
         this.authorities = authorities;
     }
 
@@ -50,6 +54,7 @@ public class UserDetailsImp implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getImage(),
+                user.getTelNumber(),
                 author );
     }
 
@@ -60,6 +65,9 @@ public class UserDetailsImp implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+    public String getTelNumber(){
+        return telNumber;
     }
 
     @Override

@@ -46,6 +46,7 @@ public class User implements Comparable<User>{
 		this.username = username;
 		this.email = email;
 		this.password = password;
+
 	}
 	@Override
 	public int compareTo(User other) {
