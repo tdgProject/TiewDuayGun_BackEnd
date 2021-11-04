@@ -42,8 +42,13 @@ public class HotelRestController {
     }
 
     @GetMapping("/hotel/user/{id}")
-    public List<Hotel> getMyHotel(@PathVariable int id) {
-        return hotelRepository.getHotelByOwnerId(id);
+    public Hotel getMyHotel(@PathVariable int id) {
+        List<Hotel> hList = hotelRepository.getHotelByOwnerId(id);
+        Hotel hotel = null;
+        for(Hotel h : hList){
+            hotel = h;
+        }
+        return hotel;
     }
 
     @GetMapping("/image/hotel/{name}")

@@ -29,7 +29,10 @@ public class Tag implements Comparable<Tag>{
 	@JsonBackReference(value = "tag-tagplace")
 	@OneToMany(mappedBy = "tag",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	private List<TagPlace> tagPlace;
-	
+
+	@Column(name = "count", nullable = false)
+	private Integer count;
+
 	@Override
 	public int compareTo(Tag other) {
 		return this.tagId-other.tagId;

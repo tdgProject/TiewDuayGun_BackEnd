@@ -2,6 +2,8 @@ package int222.project.models;
 
 import java.util.List;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 @Getter
@@ -30,9 +32,10 @@ public class Hotel implements Comparable<Hotel> {
 
 	@Column(name = "himage")
 	private String image;
-	
-//	@OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-//	private List<NearBy> place;
+
+	@OneToMany(mappedBy = "hotel",fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+	@JsonBackReference(value = "hotel-nearby")
+	private List<NearBy> places;
 	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "uid", referencedColumnName = "uid")
