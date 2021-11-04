@@ -80,7 +80,7 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
         user.setTelNumber(signUpRequest.getTel());
-        user.setImage("default_image.png");
+        user.setImage("default_user.png");
         Set<String> strRoles = signUpRequest.getRole();
 
         if (strRoles == null) {
