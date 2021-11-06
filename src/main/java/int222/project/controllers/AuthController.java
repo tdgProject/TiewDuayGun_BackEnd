@@ -74,6 +74,11 @@ public class AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
+        if (userRepository.existsByTelNumber(signUpRequest.getTel())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Telephone Number is already in use!"));
+        }
 
         // Create new user's account
         User  user = new User(signUpRequest.getUsername(),

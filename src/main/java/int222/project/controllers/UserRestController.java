@@ -26,7 +26,7 @@ public class UserRestController {
 	private FileService fileService = new UserFileService();
 
 	@GetMapping("/user/{id}")
-	@PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
+	@PreAuthorize("hasAuthority('admin')")
 	public User userById(@PathVariable int id) {
 		return userRepository.findById(id).orElse(null);
 	}
@@ -37,7 +37,7 @@ public class UserRestController {
 		User u = userRepository.findById(id).orElse(null);
 		userEdit(u,newUser);
 		if(userImage != null) {
-			if(u.getImage() != "default_user.png"){
+			if(!u.getImage().equalsIgnoreCase("default_user.png") ){
 				fileService.delete(u.getImage());
 			}
 			u.setImage(fileService.save(userImage,u.getUsername()));
