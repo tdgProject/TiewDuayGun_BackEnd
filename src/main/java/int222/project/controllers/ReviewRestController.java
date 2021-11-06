@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ReviewRestController {
         Resource file = (Resource) fileService.loadAsResource(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @PostMapping(value = "/review/add/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Review addReview(@RequestPart Review newReview,@PathVariable int id) throws Exception {
         newReview.setReviewId(new ReviewPK(id,newReview.getUser().getUserId()));
@@ -50,7 +51,7 @@ public class ReviewRestController {
         newReview.setPlace(placeRepository.findById(id).orElse(null));
         return reviewRepository.saveAndFlush(newReview);
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @PutMapping(value = "/review/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public Review editReview(@RequestPart Review newReview,@PathVariable int id) {
         Review r = reviewRepository.findById(new ReviewPK(id,newReview.getUser().getUserId())).orElse(null);
@@ -58,7 +59,7 @@ public class ReviewRestController {
         r.setRating(newReview.getRating());
         return reviewRepository.saveAndFlush(r);
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @DeleteMapping("/review/delete/{pid}/{uid}")
     public void deleteReview(@PathVariable int pid,@PathVariable int uid) {
         reviewRepository.deleteById(new ReviewPK(pid,uid));

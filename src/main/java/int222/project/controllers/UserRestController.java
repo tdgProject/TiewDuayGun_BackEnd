@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +26,13 @@ public class UserRestController {
 	private FileService fileService = new UserFileService();
 
 	@GetMapping("/user/{id}")
+	@PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
 	public User userById(@PathVariable int id) {
 		return userRepository.findById(id).orElse(null);
 	}
 
 	@PutMapping(value = "/user/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
 	public User editUser(@RequestParam(value = "image", required = false) MultipartFile userImage,@RequestPart User newUser,@PathVariable int id) {
 		User u = userRepository.findById(id).orElse(null);
 		userEdit(u,newUser);

@@ -12,6 +12,7 @@ import int222.project.repositories.*;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,6 +67,7 @@ public class PlaceRestController {
 	}
 
 	@PostMapping(value = "/place/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PreAuthorize("hasAuthority('admin')")
 	public Place addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) {
 
 		if(placeImage != null) {
@@ -76,6 +78,7 @@ public class PlaceRestController {
 	}
 
 	@PutMapping(value = "/place/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PreAuthorize("hasAuthority('admin')")
 	public Place editPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id) {
 		Place p = placeRepository.findById(id).orElse(null);
 		placeEdit(p,newPlace);
@@ -87,6 +90,7 @@ public class PlaceRestController {
 	}
 
 	@DeleteMapping("/place/delete/{id}")
+	@PreAuthorize("hasAuthority('admin')")
 	public void deletePlace(@PathVariable int id) {
 		Place p = placeRepository.findById(id).orElse(null);
 		fileService.delete(p.getImage());

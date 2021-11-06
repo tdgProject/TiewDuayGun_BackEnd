@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +43,7 @@ public class HotelRestController {
     }
 
     @GetMapping("/hotel/user/{id}")
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public Hotel getMyHotel(@PathVariable int id) {
         List<Hotel> hList = hotelRepository.getHotelByOwnerId(id);
         Hotel hotel = null;
@@ -59,6 +61,7 @@ public class HotelRestController {
     }
 
     @PostMapping(value = "/hotel/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public Hotel addHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage, @RequestPart Hotel newHotel) {
         if(hotelImage != null) {
             newHotel.setImage(fileService.save(hotelImage, newHotel.getHotelName()));
@@ -69,6 +72,7 @@ public class HotelRestController {
     }
 
     @PutMapping(value = "/hotel/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public Hotel editHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage,@RequestPart Hotel newHotel,@PathVariable int id) {
         Hotel h = hotelRepository.findById(id).orElse(null);
         h.setHotelName(newHotel.getHotelName());
@@ -83,6 +87,7 @@ public class HotelRestController {
     }
 
     @PostMapping(value = "/nearby/add/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public NearBy addNearby(@RequestPart NearBy newNearBy,@PathVariable int id) throws Exception {
         newNearBy.setNearById(new NearByPK(id,newNearBy.getHotel().getHotelId()));
         newNearBy.setHotel(hotelRepository.findById(newNearBy.getHotel().getHotelId()).orElse(null));
@@ -91,6 +96,7 @@ public class HotelRestController {
     }
 
     @DeleteMapping("/nearby/delete/{pid}/{hid}")
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public void deleteNearBy(@PathVariable int pid,@PathVariable int hid) {
         nearByRepository.deleteById(new NearByPK(pid,hid));
         nearByRepository.flush();
