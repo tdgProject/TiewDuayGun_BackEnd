@@ -37,7 +37,7 @@ public class UserRestController {
 		User u = userRepository.findById(id).orElse(null);
 		userEdit(u,newUser);
 		if(userImage != null) {
-			if(u.getImage() != "default_user.png."){
+			if(u.getImage() != "default_user.png"){
 				fileService.delete(u.getImage());
 			}
 			u.setImage(fileService.save(userImage,u.getUsername()));
