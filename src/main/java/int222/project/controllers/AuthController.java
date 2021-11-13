@@ -1,5 +1,6 @@
 package int222.project.controllers;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,14 +52,15 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
+        String jwt = jwtUtils.generateJwtToken(authentication).getToken();
+        Date exp = jwtUtils.generateJwtToken(authentication).getExp();
         UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
+                exp,
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
