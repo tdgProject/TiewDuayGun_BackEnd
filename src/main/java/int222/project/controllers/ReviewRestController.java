@@ -36,6 +36,12 @@ public class ReviewRestController {
         return reviewRepository.findAllByPlaceId(id);
     }
 
+    @GetMapping("/review/user/{id}")
+    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
+    public List<Review> listReviewsByUserId(@PathVariable int id) {
+        return reviewRepository.findAllByUserId(id);
+    }
+
     @GetMapping("/image/user/{name}")
     @ResponseBody
     public ResponseEntity<Resource> getUserImage(@PathVariable String name) {
