@@ -15,4 +15,7 @@ public interface PlaceRepository extends JpaRepository<Place, Integer> {
     @Modifying
     @Query("SELECT p FROM Place p WHERE p.placeName like %:name%")
     public List<Place> listPLaceByName(@Param("name") String name);
+
+    boolean existsByPlaceName(String placeName);
+
 }
