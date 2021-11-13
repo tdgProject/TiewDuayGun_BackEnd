@@ -4,6 +4,7 @@ package int222.project.controllers;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import int222.project.payload.response.MessageResponse;
 import int222.project.services.FileService;
 import int222.project.services.PlaceFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,23 +40,23 @@ public class PlaceRestController {
 	}
 
 	@GetMapping("/places")
-	public List<Place> placeList() {
-		return placeRepository.findAll();
+	public ResponseEntity<?> placeList() {
+		return ResponseEntity.ok(placeRepository.findAll());
 	}
 
 	@GetMapping("/place/tag/{id}")
-	public List<Place> placeByTagId(@PathVariable int id) {
-		return tagPlaceRepository.listPLaceByTagId(id);
+	public ResponseEntity<?> placeByTagId(@PathVariable int id) {
+		return ResponseEntity.ok(tagPlaceRepository.listPLaceByTagId(id));
 	}
 
 	@GetMapping("/place/name/{name}")
-	public List<Place> placeByName(@PathVariable String name) {
-		return placeRepository.listPLaceByName(name);
+	public ResponseEntity<?> placeByName(@PathVariable String name) {
+		return ResponseEntity.ok(placeRepository.listPLaceByName(name));
 	}
 
 	@GetMapping("/place/{id}")
-	public Place placeById(@PathVariable int id) {
-		return placeRepository.findById(id).orElse(null);
+	public ResponseEntity<?> placeById(@PathVariable int id) {
+		return ResponseEntity.ok(placeRepository.findById(id).orElse(null));
 	}
 
 	@GetMapping("/image/place/{name}")
@@ -67,25 +68,35 @@ public class PlaceRestController {
 
 	@PostMapping(value = "/place/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasAuthority('admin')")
-	public Place addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) {
-
+	public ResponseEntity<?> addPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage, @RequestPart Place newPlace) {
+		if (placeRepository.existsByPlaceName(newPlace.getPlaceName())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Place's Name is already exists!"));
+		}
 		if(placeImage != null) {
 			newPlace.setImage(fileService.save(placeImage, newPlace.getPlaceName()));
 		}
 		addTagPlace(newPlace);
-		return placeRepository.saveAndFlush(newPlace);
+		return ResponseEntity.ok(placeRepository.saveAndFlush(newPlace));
 	}
 
 	@PutMapping(value = "/place/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasAuthority('admin')")
-	public Place editPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id) {
+	public ResponseEntity<?> editPlace(@RequestParam(value = "image", required = false) MultipartFile placeImage,@RequestPart Place newPlace,@PathVariable int id){
 		Place p = placeRepository.findById(id).orElse(null);
+		if (placeRepository.existsByPlaceName(newPlace.getPlaceName())&&!(p.getPlaceName().equalsIgnoreCase(newPlace.getPlaceName()))) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: Place's Name is already exists!"));
+		}
+
 		placeEdit(p,newPlace);
 		if(placeImage != null) {
 			fileService.delete(p.getImage());
 			p.setImage(fileService.save(placeImage,p.getPlaceName()));
 		}
-		return placeRepository.saveAndFlush(p);
+		return ResponseEntity.ok(placeRepository.saveAndFlush(p));
 	}
 
 	@DeleteMapping("/place/delete/{id}")

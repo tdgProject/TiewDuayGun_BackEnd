@@ -46,26 +46,33 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            jwtObject token = jwtUtils.generateJwtToken(authentication);
+            String jwt = token.getToken();
+            Date exp = token.getExp();
+            UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication).getToken();
-        Date exp = jwtUtils.generateJwtToken(authentication).getExp();
-        UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    exp,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getEmail(),
+                    roles,
+                    userDetails.getImage(),
+                    userDetails.getTelNumber()));
+        }catch (Exception e){
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Invalid Email or Password"));
+        }
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                exp,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getEmail(),
-                roles,
-                userDetails.getImage(),
-                userDetails.getTelNumber()));
     }
 
     @PostMapping("/signup")

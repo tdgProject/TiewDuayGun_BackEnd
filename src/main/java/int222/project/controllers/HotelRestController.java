@@ -1,6 +1,7 @@
 package int222.project.controllers;
 
 import int222.project.models.*;
+import int222.project.payload.response.MessageResponse;
 import int222.project.repositories.HotelRepository;
 import int222.project.repositories.NearByRepository;
 import int222.project.repositories.PlaceRepository;
@@ -32,48 +33,68 @@ public class HotelRestController {
     private FileService fileService = new HotelFileService();
 
     @GetMapping("/hotels")
-    public List<Hotel> listAllHotel(){
-        return hotelRepository.findAll();
+    public ResponseEntity<?> listAllHotel(){
+        return ResponseEntity.ok(hotelRepository.findAll());
     }
 
     @GetMapping("/hotel/{id}")
-    public List<NearBy> listHotelByPlaceId(@PathVariable int id) {
-        return nearByRepository.findAllByPlaceId(id);
+    public ResponseEntity<?> listHotelByPlaceId(@PathVariable int id) {
+        return ResponseEntity.ok(nearByRepository.findAllByPlaceId(id));
     }
 
     @GetMapping("/hotel/user/{id}")
     @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
-    public Hotel getMyHotel(@PathVariable int id) {
+    public ResponseEntity<?> getMyHotel(@PathVariable int id) {
         List<Hotel> hList = hotelRepository.getHotelByOwnerId(id);
         Hotel hotel = null;
         for(Hotel h : hList){
             hotel = h;
         }
-        return hotel;
+        return ResponseEntity.ok(hotel);
     }
 
     @GetMapping("/image/hotel/{name}")
     @ResponseBody
-    public ResponseEntity<org.springframework.core.io.Resource> getHotelImage(@PathVariable String name) {
+    public ResponseEntity<Resource> getHotelImage(@PathVariable String name) {
         org.springframework.core.io.Resource file = (Resource) fileService.loadAsResource(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }
 
     @PostMapping(value = "/hotel/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
-    public Hotel addHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage, @RequestPart Hotel newHotel) {
+    public ResponseEntity<?> addHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage, @RequestPart Hotel newHotel) {
+        if (hotelRepository.existsByEmail(newHotel.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already exists!"));
+        }
+        if (hotelRepository.existsByTelNumber(newHotel.getTelNumber())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Telephone Number is already exists!"));
+        }
         if(hotelImage != null) {
             newHotel.setImage(fileService.save(hotelImage, newHotel.getHotelName()));
         }
         User user = userRepository.findById(newHotel.getOwner().getUserId()).orElse(null);
         newHotel.setOwner(user);
-        return hotelRepository.saveAndFlush(newHotel);
+        return ResponseEntity.ok(hotelRepository.saveAndFlush(newHotel));
     }
 
     @PutMapping(value = "/hotel/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
-    public Hotel editHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage,@RequestPart Hotel newHotel,@PathVariable int id) {
+    public ResponseEntity<?> editHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage,@RequestPart Hotel newHotel,@PathVariable int id) {
         Hotel h = hotelRepository.findById(id).orElse(null);
+        if (hotelRepository.existsByEmail(newHotel.getEmail())&&!(h.getEmail().equalsIgnoreCase(newHotel.getEmail()))) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already exists!"));
+        }
+        if (hotelRepository.existsByTelNumber(newHotel.getTelNumber())&&!(h.getTelNumber().equalsIgnoreCase(newHotel.getTelNumber()))) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Telephone Number is already exists!"));
+        }
         h.setHotelName(newHotel.getHotelName());
         h.setAddress(newHotel.getAddress());
         h.setEmail(newHotel.getEmail());
@@ -82,16 +103,16 @@ public class HotelRestController {
             fileService.delete(h.getImage());
             h.setImage(fileService.save(hotelImage, h.getHotelName()));
         }
-        return hotelRepository.saveAndFlush(h);
+        return ResponseEntity.ok(hotelRepository.saveAndFlush(h));
     }
 
     @PostMapping(value = "/nearby/add/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
-    public NearBy addNearby(@RequestPart NearBy newNearBy,@PathVariable int id) throws Exception {
+    public ResponseEntity<?> addNearby(@RequestPart NearBy newNearBy,@PathVariable int id) throws Exception {
         newNearBy.setNearById(new NearByPK(id,newNearBy.getHotel().getHotelId()));
         newNearBy.setHotel(hotelRepository.findById(newNearBy.getHotel().getHotelId()).orElse(null));
         newNearBy.setPlace(placeRepository.findById(id).orElse(null));
-        return nearByRepository.saveAndFlush(newNearBy);
+        return ResponseEntity.ok(nearByRepository.saveAndFlush(newNearBy));
     }
 
     @DeleteMapping("/nearby/delete/{pid}/{hid}")
