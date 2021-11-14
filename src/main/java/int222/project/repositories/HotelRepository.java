@@ -16,7 +16,11 @@ public interface HotelRepository extends JpaRepository<Hotel, Integer> {
     @Query("SELECT h FROM Hotel h WHERE h.owner.userId = :id")
     public List<Hotel> getHotelByOwnerId(@Param("id") Integer id);
 
+    Boolean existsByHotelName(String hotelName);
+
     Boolean existsByEmail(String email);
 
     Boolean existsByTelNumber(String tel);
+
+
 }
