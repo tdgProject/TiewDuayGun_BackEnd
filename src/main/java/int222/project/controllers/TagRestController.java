@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/" )
 @RestController
 public class TagRestController {
 
