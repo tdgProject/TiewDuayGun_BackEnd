@@ -53,7 +53,7 @@ public class  AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             jwtObject token = jwtUtils.generateJwtToken(authentication);
             String jwt = token.getToken();
-            Date exp = token.getExp();
+            long exp = token.getExp();
             UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
@@ -87,12 +87,6 @@ public class  AuthController {
                     .badRequest()
                     .body(new MessageResponse("Error: Telephone Number is already in use!"));
         }
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already in use!"));
-        }
-
         // Create new user's account
         User  user = new User(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),

@@ -10,9 +10,9 @@ import java.util.Date;
 public class jwtObject {
 
     private String token;
-    private Date exp;
+    private long exp;
 
-    public jwtObject(String accessToken, Date exp) {
+    public jwtObject(String accessToken, long exp) {
         this.token = accessToken;
         this.exp = exp;
     }

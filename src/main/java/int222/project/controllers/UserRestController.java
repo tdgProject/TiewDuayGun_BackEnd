@@ -61,18 +61,6 @@ public class UserRestController {
 	@PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
 	public ResponseEntity<?> editUser(@RequestParam(value = "image", required = false) MultipartFile userImage,@RequestPart User newUser,@PathVariable int id) throws Exception{
 		User u = userRepository.findById(id).orElse(null);
-
-		if (userRepository.existsByUsername(newUser.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already in use!"));
-		}
-
-		if (userRepository.existsByTelNumber(newUser.getTelNumber())&&!(u.getTelNumber().equalsIgnoreCase(newUser.getTelNumber()))) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Telephone Number is already in use!"));
-		}
 		if (userRepository.existsByTelNumber(newUser.getTelNumber())&&!(u.getTelNumber().equalsIgnoreCase(newUser.getTelNumber()))) {
 			return ResponseEntity
 					.badRequest()
