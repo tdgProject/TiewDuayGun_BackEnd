@@ -71,7 +71,7 @@ public class UserRestController {
 			if (!u.getImage().equalsIgnoreCase("default_user.png")) {
 				fileService.delete(u.getImage());
 			}
-			u.setImage(fileService.save(userImage, u.getUsername()));
+			u.setImage(fileService.save(userImage, u.getUsername()+'_'+u.getUserId()));
 		}
 		return ResponseEntity.ok(userRepository.saveAndFlush(u));
 	}
