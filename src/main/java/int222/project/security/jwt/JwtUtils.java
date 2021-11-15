@@ -30,7 +30,7 @@ public class JwtUtils {
                 .setExpiration(exp)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
-        return new jwtObject(jwt,exp);
+        return new jwtObject(jwt,exp.getTime());
     }
 
     public String getEmailFromJwtToken(String token) {

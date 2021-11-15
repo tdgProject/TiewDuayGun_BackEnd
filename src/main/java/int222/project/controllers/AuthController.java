@@ -54,7 +54,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             jwtObject token = jwtUtils.generateJwtToken(authentication);
             String jwt = token.getToken();
-            Date exp = token.getExp();
+            long exp = token.getExp();
             UserDetailsImp userDetails = (UserDetailsImp) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
                     .map(item -> item.getAuthority())
