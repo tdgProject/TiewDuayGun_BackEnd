@@ -18,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/" )
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 public class HotelRestController {
 
     @Autowired
@@ -64,6 +64,11 @@ public class HotelRestController {
     @PostMapping(value = "/hotel/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
     public ResponseEntity<?> addHotel(@RequestParam(value = "image", required = false) MultipartFile hotelImage, @RequestPart Hotel newHotel) {
+        if (hotelRepository.existsByHotelName(newHotel.getHotelName())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: HotelName is already exists!"));
+        }
         if (hotelRepository.existsByEmail(newHotel.getEmail())) {
             return ResponseEntity
                     .badRequest()

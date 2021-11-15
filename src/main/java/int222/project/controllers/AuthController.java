@@ -27,11 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8080/" )
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class  AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -87,6 +86,11 @@ public class AuthController {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Telephone Number is already in use!"));
+        }
+        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Username is already in use!"));
         }
 
         // Create new user's account
