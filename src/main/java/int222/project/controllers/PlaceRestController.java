@@ -1,6 +1,7 @@
 package int222.project.controllers;
 
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -41,21 +42,25 @@ public class PlaceRestController {
 
 	@GetMapping("/places")
 	public ResponseEntity<?> placeList() {
+		onstart();
 		return ResponseEntity.ok(placeRepository.findAll());
 	}
 
 	@GetMapping("/place/tag/{id}")
 	public ResponseEntity<?> placeByTagId(@PathVariable int id) {
+		onstart();
 		return ResponseEntity.ok(tagPlaceRepository.listPLaceByTagId(id));
 	}
 
 	@GetMapping("/place/name/{name}")
 	public ResponseEntity<?> placeByName(@PathVariable String name) {
+		onstart();
 		return ResponseEntity.ok(placeRepository.listPLaceByName(name));
 	}
 
 	@GetMapping("/place/{id}")
 	public ResponseEntity<?> placeById(@PathVariable int id) {
+		onstart();
 		return ResponseEntity.ok(placeRepository.findById(id).orElse(null));
 	}
 
@@ -140,6 +145,10 @@ public class PlaceRestController {
 					uRating+=r.getRating();
 				}
 				pRating=uRating/reviews.size();
+				pRating= Double.parseDouble(new DecimalFormat("#.##").format(pRating));
+				p.setPlaceRating(pRating);
+			}
+			else{
 				p.setPlaceRating(pRating);
 			}
 		}

@@ -37,7 +37,7 @@ public class ReviewRestController {
     }
 
     @GetMapping("/review/user/{id}")
-    @PreAuthorize("hasAuthority('business') or hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     public ResponseEntity listReviewsByUserId(@PathVariable int id) {
         return ResponseEntity.ok(reviewRepository.findAllByUserId(id));
     }
