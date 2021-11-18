@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import lombok.*;
 
 @Getter
@@ -19,7 +20,7 @@ public class Review {
 	@JsonManagedReference
 	private ReviewPK reviewId;
 
-	@JsonBackReference(value = "review-place")
+//	@JsonBackReference(value = "review-place")
 	@ManyToOne(optional = false)
 	@MapsId("placeId")
 	@JoinColumn(name = "pid")
