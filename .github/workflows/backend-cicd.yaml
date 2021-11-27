@@ -36,5 +36,4 @@ jobs:
           script: |
             cd ./tdgProject
             docker pull ghcr.io/tdgproject/tdg-backend:latest
-            docker-compose down
-            docker-compose up -d
+            docker-compose restart
