@@ -3,12 +3,14 @@ package int222.project.payload.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
 public class JwtResponse {
     private String token;
+    private long exp;
     private String type = "Bearer";
     private Integer id;
     private String username;
@@ -17,8 +19,9 @@ public class JwtResponse {
     private String image;
     private String TelNumber;
 
-    public JwtResponse(String accessToken, Integer id, String username, String email, List<String> roles, String image,String TelNumber) {
+    public JwtResponse(String accessToken,long exp, Integer id, String username, String email, List<String> roles, String image,String TelNumber) {
         this.token = accessToken;
+        this.exp = exp;
         this.id = id;
         this.username = username;
         this.email = email;

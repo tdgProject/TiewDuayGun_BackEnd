@@ -8,6 +8,7 @@ import int222.project.repositories.TagPlaceRepository;
 import int222.project.repositories.TagRepository;
 import int222.project.repositories.TagTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.ArrayUtils;
 
@@ -15,8 +16,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:8080/" )
 @RestController
+<<<<<<< HEAD
 @CrossOrigin(origins = "http://13.76.86.65:8080")
+=======
+>>>>>>> 622c081fd32dd55f45c44a02e6b99fc19c902a36
 public class TagRestController {
 
     @Autowired
@@ -27,27 +32,27 @@ public class TagRestController {
     private TagPlaceRepository tagPlaceRepository;
 
     @GetMapping("/tags")
-    public List<Tag> tags(){
-        return tagRepository.findAll();
+    public ResponseEntity<?> tags(){
+        return ResponseEntity.ok(tagRepository.findAll());
     }
 
     @GetMapping("/types")
-    public List<TagType> types(){
-        return tagTypeRepository.findAll();
+    public ResponseEntity<?>types(){
+        return ResponseEntity.ok(tagTypeRepository.findAll());
     }
 
     @GetMapping("/tags/province")
-    public List<Tag> provinceTags(){
-        return tagTypeRepository.listProvinceTag();
+    public ResponseEntity<?> provinceTags(){
+        return ResponseEntity.ok(tagTypeRepository.listProvinceTag());
     }
 
     @GetMapping("/tags/etc")
-    public List<Tag> etcTags(){
-        return tagTypeRepository.listEtcTag();
+    public ResponseEntity<?> etcTags(){
+        return ResponseEntity.ok(tagTypeRepository.listEtcTag());
     }
 
     @GetMapping("/types/count")
-    public List<TagType> typesWithCount(){
+    public ResponseEntity<?> typesWithCount(){
         List<TagType> ttList = tagTypeRepository.findAll();
         for (TagType tt : ttList){
             for(Tag t : tt.getTag()){
@@ -56,7 +61,7 @@ public class TagRestController {
             }
         }
 
-        return ttList;
+        return ResponseEntity.ok(ttList);
 
     }
 }

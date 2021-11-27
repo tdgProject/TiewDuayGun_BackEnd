@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:8080/" )
 @RestController
+<<<<<<< HEAD
 @CrossOrigin(origins = "http://13.76.86.65:8080")
+=======
+>>>>>>> 622c081fd32dd55f45c44a02e6b99fc19c902a36
 public class ReviewRestController {
 
     @Autowired
@@ -27,13 +31,19 @@ public class ReviewRestController {
     private FileService fileService = new UserFileService();
 
     @GetMapping("/reviews")
-    public List<Review> listReviews() {
-        return reviewRepository.findAll();
+    public ResponseEntity listReviews() {
+        return ResponseEntity.ok(reviewRepository.findAll());
     }
 
     @GetMapping("/review/{id}")
-    public List<Review> listReviewsByPlaceId(@PathVariable int id) {
-        return reviewRepository.findAllByPlaceId(id);
+    public ResponseEntity listReviewsByPlaceId(@PathVariable int id) {
+        return ResponseEntity.ok(reviewRepository.findAllByPlaceId(id));
+    }
+
+    @GetMapping("/review/user/{id}")
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
+    public ResponseEntity listReviewsByUserId(@PathVariable int id) {
+        return ResponseEntity.ok(reviewRepository.findAllByUserId(id));
     }
 
     @GetMapping("/image/user/{name}")
@@ -42,23 +52,23 @@ public class ReviewRestController {
         Resource file = (Resource) fileService.loadAsResource(name);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(file);
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @PostMapping(value = "/review/add/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Review addReview(@RequestPart Review newReview,@PathVariable int id) throws Exception {
+    public ResponseEntity addReview(@RequestPart Review newReview,@PathVariable int id) throws Exception {
         newReview.setReviewId(new ReviewPK(id,newReview.getUser().getUserId()));
         newReview.setUser(userRepository.findById(newReview.getUser().getUserId()).orElse(null));
         newReview.setPlace(placeRepository.findById(id).orElse(null));
-        return reviewRepository.saveAndFlush(newReview);
+        return ResponseEntity.ok(reviewRepository.saveAndFlush(newReview));
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @PutMapping(value = "/review/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public Review editReview(@RequestPart Review newReview,@PathVariable int id) {
+    public ResponseEntity editReview(@RequestPart Review newReview,@PathVariable int id) {
         Review r = reviewRepository.findById(new ReviewPK(id,newReview.getUser().getUserId())).orElse(null);
         r.setReview(newReview.getReview());
         r.setRating(newReview.getRating());
-        return reviewRepository.saveAndFlush(r);
+        return ResponseEntity.ok(reviewRepository.saveAndFlush(r));
     }
-
+    @PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
     @DeleteMapping("/review/delete/{pid}/{uid}")
     public void deleteReview(@PathVariable int pid,@PathVariable int uid) {
         reviewRepository.deleteById(new ReviewPK(pid,uid));
