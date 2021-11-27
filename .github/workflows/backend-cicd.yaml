@@ -1,0 +1,38 @@
+name: Auto build and deploy
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/tdgproject/tdg-backend
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: "13.76.86.65"
+          username: project222
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: "22"
+          script: |
+            cd /tdgProject/backEnd
+            git pull origin main
+            cd ..
+            docker pull ghcr.io/tdgproject/tdg-backend:latest
