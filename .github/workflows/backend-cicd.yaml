@@ -1,6 +1,6 @@
 name: Auto build and deploy
 on:
-  pull_request:
+  push:
     branches:
       - main
 jobs:
