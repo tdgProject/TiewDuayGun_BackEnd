@@ -38,24 +38,25 @@ public class UserRestController {
 		return ResponseEntity.ok(userRepository.findById(id).orElse(null));
 	}
 
-//	@PutMapping(value = "/user/role/{id}")
-//	@PreAuthorize("hasAuthority('admin')")
-//	public ResponseEntity<?> changeUserRole(@RequestPart User newUser,@PathVariable int id) {
-//		User u = userRepository.findById(id).orElse(null);
-//		switch (newUser.getRole().toString()){
-//			case "member":
-//				u.setRole(UserRole.member);
-//			case "business":
-//				u.setRole(UserRole.business);
-//				break;
-//			case "admin":
-//				u.setRole(UserRole.admin);
-//				break;
-//			default:
-//				break;
-//		}
-//		return ResponseEntity.ok(userRepository.saveAndFlush(u));
-//	}
+	@PutMapping(value = "/user/role/{id}")
+	@PreAuthorize("hasAuthority('admin')")
+	public ResponseEntity<?> changeUserRole(@RequestPart User newUser,@PathVariable int id) {
+		User u = userRepository.findById(id).orElse(null);
+		switch (newUser.getRole().toString()){
+			case "member":
+				u.setRole(UserRole.member);
+				break;
+			case "business":
+				u.setRole(UserRole.business);
+				break;
+			case "admin":
+				u.setRole(UserRole.admin);
+				break;
+			default:
+				break;
+		}
+		return ResponseEntity.ok(userRepository.saveAndFlush(u));
+	}
 
 	@PutMapping(value = "/user/edit/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@PreAuthorize("hasAuthority('member') or hasAuthority('business') or hasAuthority('admin')")
