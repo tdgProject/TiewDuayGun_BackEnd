@@ -34,7 +34,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: "22"
           script: |
-            cd ./tdgProject/backEnd
-            git pull origin main
-            cd ..
+            cd ./tdgProject
             docker pull ghcr.io/tdgproject/tdg-backend:latest
+            docker-compose down
+            docker-compose up -d
