@@ -18,12 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://localhost:8080/")
+
 @RestController
-<<<<<<< HEAD
-@CrossOrigin(origins = "http://13.76.86.65:8080")
-=======
->>>>>>> 622c081fd32dd55f45c44a02e6b99fc19c902a36
 public class PlaceRestController {
 	
 	@Autowired
